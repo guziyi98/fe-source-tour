@@ -67,4 +67,106 @@
 // 只要obj.name变化，自动更新页面
 </script>
 
+<script>
+    // 防抖
+    const debounce = function (fn, timeout = 2000) {
+        let timer = null
+        return function () {
+            if (timer) {
+                clearTimeout(timer)
+            }
+            timer = setTimeout(() => {
+                fn.apply(this, arguments)
+            }, timeout)
+        }
+    }
+
+    // 节流
+    const throttle = function (fn, timeout = 2000) {
+        let timer = null
+        return function () {
+            if (timer) {
+                return
+            }
+            timer = setTimeout(() => {
+                fn.apply(this, arguments)
+                timer = null
+            }, timeout)
+        }
+    }
+
+    // 函数柯里化
+    const curry = function (fn, args = []) {
+        return function (...arg) {
+            if (arg.length >= fn.length) {
+                return fn.apply(this, [...args, ...arg])
+            } else {
+                return curry(fn, [...args, ...arg])
+            }
+        }
+    }
+
+    // 模拟new操作
+    const create = function (fn, ...arg) {
+        let obj = Object.create(fn.prototype)
+        let res = fn.apply(obj, arg)
+        return res instanceof Object ? res : obj
+    }
+
+    // 实现instanceof
+    const isInstance = function (fn, obj) {
+        return obj instanceof fn
+    }
+
+    // 实现原型链继承
+    const extend = function (obj, ...arg) {
+        let res = Object.create(obj)
+        arg.forEach(item => {
+            Object.assign(res, item)
+        })
+        return res
+    }
+    // 手写Object.is
+    const is = function (x, y) {
+        if (x === y) {
+            return x !== 0 || y !== 0 || 1 / x === 1 / y
+        } else {
+            return x !== x && y !== y
+        }
+    }
+    
+    // 手写Object.assign
+    const assign = function (obj, ...arg) {
+        arg.forEach(item => {
+            for (let key in item) {
+                obj[key] = item[key]
+            }
+        })
+        return obj
+    }
+
+    // 浅拷贝
+    const shallowCopy = function (obj) {
+        let res = {}
+        for (let key in obj) {
+            res[key] = obj[key]
+        }
+        return res
+    }
+    //深拷贝
+    const deepClone = function (obj) {
+        let res = Array.isArray(obj) ? [] : {}
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (typeof obj[key] === 'object') {
+                    res[key] = deepClone(obj[key])
+                } else {
+                    res[key] = obj[key]
+                }
+            }
+        }
+        return res
+    }
+    
+</script>
 </html>
